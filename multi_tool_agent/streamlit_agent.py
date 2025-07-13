@@ -63,8 +63,9 @@ def get_current_time(city: str) -> dict:
     report = f"The current time in {city} is {now.strftime('%Y-%m-%d %H:%M:%S %Z%z')}"
     return {"status": "success", "report": report}
 
-
-root_agent = Agent(
+def create_agent_tool() -> Agent:
+    """Creates an AgentTool for the specified agent."""
+    root_agent = Agent(
     name=settings.agent_name,
     model=settings.agent_model,
     description=("Agent to answer questions about the time and weather in a city."),
@@ -81,4 +82,5 @@ root_agent = Agent(
     # adverse_event_report_with_drug_class,
     # count_patient_reactions,
     # adverse_event_report_by_drug_name],
-)
+    )
+    return root_agent

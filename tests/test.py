@@ -14,19 +14,19 @@ def my_code():
     print("   Connected to Neo4j!")
 
     with driver.session() as session:
-        var = "MATCH (m:Manufacturer)-[:MANUFACTURES]->(d:Drug) WHERE d.name CONTAINS 'TRAMADOL' RETURN DISTINCT m.name AS manufacturer"
-        var_corr = """MATCH (d:diseases)-[:has_symptoms]->(s:symptoms) where d.name ='Diabetes' RETURN s.name"""
-        var_3 = "MATCH (s:symptoms)-[:has_symptoms]-(d:diseases) where s.name ='Fever' RETURN d.name"
-        var_2 = "MATCH (n) RETURN n LIMIT 5"
-        var_4 = "MATCH (d:diseases{name: 'Cancer'})-[:has_symptoms]->(s:symptoms {name: 'Coughing'})"
-        var_5 = """MATCH (n) RETURN COUNT(n) AS count LIMIT 5"""
-        var_5 = "MATCH (d:Disease {name: 'Cancer'})-[:HAS_SYMPTOMS]->(s:Symptom {name: 'Coughing'}) RETURN d, s"
-        var_5 = """MATCH (a:AgeGroup {ageGroup: "18-25"})<-[:FALLS_UNDER]-(c:Case) MATCH (c)-[:HAS_REACTION]->(r:Reaction) MATCH (c)-[:IS_PRIMARY_SUSPECT]->(d:Drug) RETURN d.name, d.primarySubstabce"""
-        var_5 = """MATCH (c:Case)-[:HAS_REACTION]->(r:Reaction)
-    RETURN r.description, count(c)
-    ORDER BY count(c) DESC
-    LIMIT 5;"""
-        results = session.run(var_5).data()
+        query_list = [
+            "MATCH (m:Manufacturer)-[:MANUFACTURES]->(d:Drug) WHERE d.name CONTAINS 'TRAMADOL' RETURN DISTINCT m.name AS manufacturer",
+            "MATCH (d:diseases)-[:has_symptoms]->(s:symptoms) where d.name ='Diabetes' RETURN s.name",
+            "MATCH (s:symptoms)-[:has_symptoms]-(d:diseases) where s.name ='Fever' RETURN d.name",
+            "MATCH (n) RETURN n LIMIT 5",
+            "MATCH (d:diseases{name: 'Cancer'})-[:has_symptoms]->(s:symptoms {name: 'Coughing'})",
+            "MATCH (n) RETURN COUNT(n) AS count LIMIT 5",
+            "MATCH (d:Disease {name: 'Cancer'})-[:HAS_SYMPTOMS]->(s:Symptom {name: 'Coughing'}) RETURN d, s",
+            'MATCH (a:AgeGroup {ageGroup: "18-25"})<-[:FALLS_UNDER]-(c:Case) MATCH (c)-[:HAS_REACTION]->(r:Reaction) MATCH (c)-[:IS_PRIMARY_SUSPECT]->(d:Drug) RETURN d.name, d.primarySubstabce',
+            "MATCH (c:Case)-[:HAS_REACTION]->(r:Reaction) RETURN r.description, count(c) ORDER BY count(c) DESC LIMIT 5;",
+        ]
+
+        results = session.run(query_list[1]).data()
         print(results)
 
 
@@ -196,11 +196,19 @@ def langchain_query():
         verbose=True,
         allow_dangerous_requests=True,  # Set to True if you want to allow dangerous requests
     )
-    chain.invoke({'query': """
+    chain.invoke(
+        {
+            "query": """
     Which manufacturers are connected to drugs which contain TRAMADOL in its name?
-    """})
-    chain.invoke({'query': """What are the top 5 side effects reported?
-    """})
+    """
+        }
+    )
+    chain.invoke(
+        {
+            "query": """What are the top 5 side effects reported?
+    """
+        }
+    )
 
 
 if __name__ == "__main__":

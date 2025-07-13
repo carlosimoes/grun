@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 import logging
 
+
 class Settings(BaseModel):
     agent_name: str = "grunenthal_agent"
     agent_model: str = "gemini-2.0-flash"
@@ -9,5 +10,7 @@ class Settings(BaseModel):
     neo4j_uri: str = "bolt://44.200.67.104"
     neo4j_username: str = "neo4j"
     neo4j_password: str = "combustion-majorities-pine"
+    google_api: str = "AIzaSyDHaughVboCMlu1m3TzIhHpH_5nkav5SN4"
+    vertexai_use: str = "FALSE"
 
 settings = Settings()
