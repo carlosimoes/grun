@@ -127,7 +127,7 @@ adk web
 
 ## Development
 ```bash
-
+https://b74dumde7nc4tfehmwvoyg.streamlit.app/
 ```
 
 ## QA examples
